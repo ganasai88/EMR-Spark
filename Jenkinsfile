@@ -10,7 +10,7 @@ pipeline{
 
             steps{
 
-                    gitCheckout(
+                    gitcheckout(
                         branch: 'main',
                         url: 'https://github.com/ganasai88/EMR-Spark.git'
                     )
