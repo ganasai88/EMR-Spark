@@ -6,7 +6,7 @@ pipeline {
             PROJECT_DIR = '.'
             SONAR_PROJECT_KEY = 'EMR-Spark'
             VENV_DIR = 'venv'
-            REPO_URL = 'https://github.com/ganasai88/EMR-Spark' // GitHub raw file URL
+            REPO_URL = 'https://github.com/ganasai88/EMR-Spark.git' // GitHub raw file URL
         }
 
     stages {
