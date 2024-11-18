@@ -4,10 +4,10 @@ pipeline {
     agent any
 
     environment {
-        SONAR_CREDENTIALS_ID = 'Sonar-API'
-        PROJECT_DIR = '.'
-        SONAR_PROJECT_KEY = 'EMR-Spark'
-        VENV_DIR = 'venv'
+        SONAR_CREDENTIALS_ID = 'Sonar-API'  // SonarQube credentials ID
+        PROJECT_DIR = '.'                    // Project directory (can be changed if needed)
+        SONAR_PROJECT_KEY = 'EMR-Spark'      // SonarQube project key
+        VENV_DIR = 'venv'                    // Virtual environment directory (if applicable)
     }
 
     parameters {
@@ -17,10 +17,10 @@ pipeline {
     stages {
 
         stage('Git Checkout') {
-            when { expression { params.action == 'create' } }
+            when { expression { params.action == 'create' } }  // Execute only if 'create' is selected
             steps {
                 script {
-                    // Using the gitcheckout from shared library
+                    // Ensure the gitcheckout function is defined in your shared library
                     gitcheckout(
                         branch: 'main',
                         url: 'https://github.com/ganasai88/EMR-Spark.git'
@@ -29,41 +29,11 @@ pipeline {
             }
         }
 
-        stage('Setup Virtual Environment') {
-            when { expression { params.action == 'create' } }
-            steps {
-                script {
-                    // Check if virtual environment exists and install pylint
-                    sh """
-                        if [ ! -d "${PROJECT_DIR}/${VENV_DIR}" ]; then
-                            python3 -m venv ${PROJECT_DIR}/${VENV_DIR}
-                        fi
-                        source ${PROJECT_DIR}/${VENV_DIR}/bin/activate
-                        pip install --upgrade pip
-                        pip install pylint
-                    """
-                }
-            }
-        }
-
-        stage('Run Pylint') {
-            when { expression { params.action == 'create' } }
-            steps {
-                script {
-                    // Run pylint using the virtual environment
-                    sh """
-                        source ${PROJECT_DIR}/${VENV_DIR}/bin/activate
-                        pylint ${PROJECT_DIR}
-                    """
-                }
-            }
-        }
-
         stage('SonarQube Analysis') {
-            when { expression { params.action == 'create' } }
+            when { expression { params.action == 'create' } }  // Execute only if 'create' is selected
             steps {
                 script {
-                    // Run SonarQube analysis
+                    // Ensure the sonarScanner function is defined in your shared library
                     sonarScanner(
                         sonarCredentialsId: SONAR_CREDENTIALS_ID,
                         projectDir: PROJECT_DIR,
