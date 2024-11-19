@@ -18,11 +18,10 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    // Set up a Python virtual environment and install pylint
+                    // Install python3-venv package
                     sh '''
-                    python3 -m venv ${VENV_DIR}
-                    source ${VENV_DIR}/bin/activate
-                    pip install --upgrade pip pylint
+                    sudo apt-get update
+                    sudo apt-get install -y python3-venv
                     '''
                 }
             }
