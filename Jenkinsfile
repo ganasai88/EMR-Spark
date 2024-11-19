@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
             script {
-                git 'url: '${REPO_URL}' // Use environment variable REPO_URL
+                git url: '${REPO_URL}'
                 }
             }
         }
