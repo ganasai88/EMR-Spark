@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-    stage('Setup') {
+        stage('Setup') {
             steps {
                 script {
                     // Set up a Python virtual environment and install pylint
@@ -26,5 +26,6 @@ pipeline {
                     '''
                 }
             }
+        }
     }
 }
