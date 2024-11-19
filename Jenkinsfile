@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
             script {
-                git url: '${REPO_URL}'
+                git branch: 'main, 'url: "https://github.com/ganasai88/EMR-Spark.git"
                 }
             }
         }
