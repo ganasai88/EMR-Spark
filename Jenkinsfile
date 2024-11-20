@@ -4,6 +4,7 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/ganasai88/EMR-Spark.git' // GitHub repository URL4
         VENV_DIR = 'venv'
+        SONAR_HOST_URL = 'http://3.128.79.130:9000/' // Replace with your SonarQube instance URL
     }
 
     stages {
@@ -28,21 +29,21 @@ pipeline {
             }
         }
 
-        stage('Code Analysis') {
-            steps {
-                script {
-                 withSonarQubeEnv(credentialsId: 'sonar-api') {
-                   // Run SonarQube analysis using the sonar-scanner
-                        sh '''
-                        sonarsource/sonar-scanner-cli \
-                          -Dsonar.projectKey=EMR-Spark \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=$SONAR_HOST_URL \
-                          -Dsonar.token=$SONAR_TOKEN
-                        '''
+        stage('SonarQube Analysis') {
+                    steps {
+                        script {
+                            withSonarQubeEnv(credentialsId: 'sonar-api') {
+                                // Run sonar-scanner using Docker with injected SonarQube environment variables
+                                sh '''
+                                docker pull sonarsource/sonar-scanner-cli
+                                docker run --rm \
+                                  -e SONAR_HOST_URL="${SONAR_HOST_URL}" \
+                                  -v "${PWD}:/usr/src" \
+                                  sonarsource/sonar-scanner-cli
+                                '''
+                            }
+                        }
                     }
                 }
-            }
-        }
     }
 }
