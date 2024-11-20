@@ -1,6 +1,0 @@
-# Ignore Terraform files
-.S3-Terraform/
-S3-Terraform/.terraform/*
-*.tfstate
-*.tfstate.*
-*.tfvars
