@@ -37,25 +37,15 @@ pipeline {
              }
         }
 
-       stage('Set up AWS Credentials') {
-                   steps {
-                       script {
-                           // Export AWS credentials for Terraform to use
-                           sh '''
-                           export AWS_ACCESS_KEY_ID=$ACCESS_KEY
-                           export AWS_SECRET_ACCESS_KEY=$SECRET_KEY
-                           export AWS_DEFAULT_REGION=$REGION
-                           '''
-                       }
-                   }
-       }
-
        stage('Creating S3 using Terraform') {
                            steps {
                                script {
                                    // Initialize Terraform
                                    dir(TF_DIR) {
                                        sh """
+                                             export AWS_ACCESS_KEY_ID=$ACCESS_KEY
+                                             export AWS_SECRET_ACCESS_KEY=$SECRET_KEY
+                                             export AWS_DEFAULT_REGION=$REGION
                                              terraform init
                                              terraform plan
                                        """
