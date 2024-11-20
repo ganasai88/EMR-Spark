@@ -20,7 +20,7 @@ pipeline {
         stage('SonarQube Analysis') {
                     steps {
                         script {
-                            withSonarQubeEnv(credentialsId: '83d5786d-e8a4-40a2-9f3e-b76227de9f1b') {
+                            withSonarQubeEnv(credentialsId:  'sonar-emr-1') {
                                 // Run sonar-scanner using Docker with injected SonarQube environment variables
                                 sh '''
                                 docker pull sonarsource/sonar-scanner-cli
