@@ -56,7 +56,7 @@ pipeline {
                           """
                           // Re-throw the exception to ensure the pipeline fails
                           throw e
-
+                       }
                       }
                   }
               }
