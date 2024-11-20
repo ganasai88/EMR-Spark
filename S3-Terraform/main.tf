@@ -48,9 +48,10 @@ data "aws_iam_policy_document" "example_policy" {
       identifiers = ["*"]
     }
 
+    effect = "Allow"
+
     actions = [
-      "s3:*",
-      "s3:PutBucketPolicy",
+      "s3:*"
     ]
 
     resources = [
