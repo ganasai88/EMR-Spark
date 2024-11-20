@@ -43,11 +43,8 @@ pipeline {
                                    // Initialize Terraform
                                    dir(TF_DIR) {
                                        sh """
-                                             export AWS_ACCESS_KEY_ID=$ACCESS_KEY
-                                             export AWS_SECRET_ACCESS_KEY=$SECRET_KEY
-                                             export AWS_DEFAULT_REGION=$REGION
                                              terraform init
-                                             terraform plan
+                                             terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
                                        """
                                    }
                                }
