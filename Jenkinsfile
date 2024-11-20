@@ -16,18 +16,6 @@ pipeline {
             }
         }
 
-        stage('Setup') {
-            steps {
-                script {
-                    // Set up a Python virtual environment and install pylint
-                    sh '''
-                    python3 -m venv ${VENV_DIR}
-                    . ${VENV_DIR}/bin/activate
-                    pip install --upgrade pip pylint
-                    '''
-                }
-            }
-        }
 
         stage('SonarQube Analysis') {
                     steps {
