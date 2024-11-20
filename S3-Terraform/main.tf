@@ -8,15 +8,6 @@ resource "aws_s3_bucket" "example" {
     Environment = "Dev"
   }
 }
-
-resource "aws_s3_bucket_ownership_controls" "example" {
-  bucket = aws_s3_bucket.example.id
-
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
 resource "aws_s3_bucket_public_access_block" "example" {
   bucket = aws_s3_bucket.example.id
 
@@ -24,6 +15,13 @@ resource "aws_s3_bucket_public_access_block" "example" {
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
+}
+resource "aws_s3_bucket_ownership_controls" "example" {
+  bucket = aws_s3_bucket.example.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
 }
 
 resource "aws_s3_bucket_acl" "example" {
@@ -44,7 +42,7 @@ resource "aws_s3_bucket_policy" "example_policy" {
 data "aws_iam_policy_document" "example_policy" {
   statement {
     principals {
-      type        = "AWS"
+      type        = "*"
       identifiers = ["*"]
     }
 
