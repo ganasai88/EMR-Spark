@@ -36,14 +36,17 @@ resource "aws_s3_bucket_acl" "example" {
   acl    = "public-read-write" # Change to public-read-write
 }
 
+resource "aws_s3_bucket_policy" "example_policy" {
+  bucket = aws_s3_bucket.example.id
+  policy = data.aws_iam_policy_document.example_policy.json
+}
+
 data "aws_iam_policy_document" "example_policy" {
   statement {
     principals {
       type        = "AWS"
       identifiers = ["*"]
     }
-
-    effect = "Allow"
 
     actions = [
       "s3:*"
@@ -56,7 +59,3 @@ data "aws_iam_policy_document" "example_policy" {
   }
 }
 
-resource "aws_s3_bucket_policy" "example" {
-  bucket = aws_s3_bucket.example.id
-  policy = data.aws_iam_policy_document.example_policy.json
-}
