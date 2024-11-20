@@ -34,11 +34,11 @@ pipeline {
                  withSonarQubeEnv(credentialsId: 'sonar-api') {
                    // Run SonarQube analysis using the sonar-scanner
                         sh '''
-                        sonar-scanner \
+                        sonarsource/sonar-scanner-cli \
                           -Dsonar.projectKey=EMR-Spark \
                           -Dsonar.sources=. \
-                          -Dsonar.host.url=SONAR_HOST_URL \
-                          -Dsonar.token=SONAR_TOKEN
+                          -Dsonar.host.url=$SONAR_HOST_URL \
+                          -Dsonar.token=$SONAR_TOKEN
                         '''
                     }
                 }
