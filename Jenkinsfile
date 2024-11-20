@@ -40,7 +40,7 @@ pipeline {
                                   -e SONAR_HOST_URL="${SONAR_HOST_URL}" \
                                   -e SONAR_LOGIN="${SONAR_TOKEN}" \
                                   -v "${PWD}:/usr/src" \
-                                  sonarsource/sonar-scanner-cli
+                                  sonarsource/sonar-scanner-cli -X
                                 '''
                             }
                         }
