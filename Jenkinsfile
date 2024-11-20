@@ -35,15 +35,16 @@ pipeline {
              }
         }
 
-        stage('Set Up Terraform') {
-                    steps {
-                        script {
-                            // Install Terraform if necessary
-                            sh 'curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -'
-                            sh 'sudo apt-get update && sudo apt-get install terraform'
-                        }
-                    }
-                }
+       stage('Creating S3 using Terraform') {
+                           steps {
+                               script {
+                                   // Initialize Terraform
+                                   dir(TF_DIR) {
+                                       sh 'terraform init'
+                                   }
+                               }
+                           }
+       }
 
     }
 }
