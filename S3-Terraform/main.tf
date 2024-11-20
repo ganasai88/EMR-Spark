@@ -50,6 +50,7 @@ data "aws_iam_policy_document" "example_policy" {
 
     actions = [
       "s3:*",
+      "s3:PutBucketPolicy",
     ]
 
     resources = [
