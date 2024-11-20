@@ -1,6 +1,9 @@
-# Ignore Terraform files
-.S3-Terraform/
-S3-Terraform/.terraform/*
+# local .terraform provider
+.terraform/*
+S3-Terraform/.terraform/
+# tf state files
 *.tfstate
 *.tfstate.*
+
+# variables files
 *.tfvars
