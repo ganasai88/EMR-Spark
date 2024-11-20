@@ -1,5 +1,3 @@
-
-
 resource "aws_s3_bucket" "example" {
   bucket = "emrterraform"
 
@@ -8,6 +6,7 @@ resource "aws_s3_bucket" "example" {
     Environment = "Dev"
   }
 }
+
 resource "aws_s3_bucket_public_access_block" "example" {
   bucket = aws_s3_bucket.example.id
 
@@ -16,6 +15,7 @@ resource "aws_s3_bucket_public_access_block" "example" {
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
+
 resource "aws_s3_bucket_ownership_controls" "example" {
   bucket = aws_s3_bucket.example.id
 
@@ -31,7 +31,7 @@ resource "aws_s3_bucket_acl" "example" {
   ]
 
   bucket = aws_s3_bucket.example.id
-  acl    = "public-read-write" # Change to public-read-write
+  acl    = "public-read-write" # Use "private" if public access isn't necessary
 }
 
 resource "aws_s3_bucket_policy" "example_policy" {
@@ -42,10 +42,10 @@ resource "aws_s3_bucket_policy" "example_policy" {
 data "aws_iam_policy_document" "example_policy" {
   statement {
     principals {
-      type        = "*"
+      type        = "AWS"
       identifiers = [
-        "arn:aws:iam::767398001187:user/EMR-Cluster",
-        "*"]
+        "arn:aws:iam::767398001187:user/EMR-Cluster"
+      ]
     }
 
     actions = [
@@ -54,9 +54,7 @@ data "aws_iam_policy_document" "example_policy" {
 
     resources = [
       aws_s3_bucket.example.arn,
-      "${aws_s3_bucket.example.arn}/*",
-
+      "${aws_s3_bucket.example.arn}/*"
     ]
   }
 }
-
