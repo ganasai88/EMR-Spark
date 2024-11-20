@@ -37,8 +37,8 @@ pipeline {
                         sonar-scanner \
                           -Dsonar.projectKey=EMR-Spark \
                           -Dsonar.sources=. \
-                          -Dsonar.host.url=http://3.128.79.130:9000 \
-                          -Dsonar.token=sqp_667dd69b43ba9b086ef638db1ed81823ae887acf
+                          -Dsonar.host.url=SONAR_HOST_URL \
+                          -Dsonar.token=SONAR_TOKEN
                         '''
                     }
                 }
