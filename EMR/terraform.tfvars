@@ -16,3 +16,7 @@ master_ebs_size = "64"
 core_instance_type = "m5.xlarge"
 core_instance_count = 2
 core_ebs_size = "64"
+
+access_key="AKIA3FLD4HIR2V6N4DV2"
+secret_key="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"
+region = "us-east-2"
