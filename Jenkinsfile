@@ -24,11 +24,13 @@ pipeline {
                 script {
                     sh '''
                     # Check if AWS CLI is installed
-                    if ! command -v aws &> /dev/null; then
-                        echo "AWS CLI not found, installing..."
+                    if aws --version > /dev/null 2>&1; then
+                        echo "AWS CLI is installed."
+                    else
+                        echo "AWS CLI is not installed. Installing now..."
                         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-  				        unzip awscliv2.zip
-  				        sudo ./aws/install
+                        unzip awscliv2.zip
+                        sudo ./aws/install
                     fi
 
                     # Configure AWS CLI
