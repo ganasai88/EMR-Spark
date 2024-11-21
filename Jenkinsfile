@@ -19,63 +19,28 @@ pipeline {
             }
         }
 
+        stage('Setup AWS CLI') {
+            steps {
+                script {
+                    sh '''
+                    # Check if AWS CLI is installed
+                    if ! command -v aws &> /dev/null; then
+                        echo "AWS CLI not found, installing..."
+                        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  				        unzip awscliv2.zip
+  				        sudo ./aws/install
+                    fi
 
-        stage('SonarQube Analysis') {
-             steps {
-                 script {
-                         sh '''
-                         docker run --rm -e SONAR_HOST_URL=http://18.189.184.41:9000/ \
-                         -e SONAR_LOGIN=sqp_b32477c8d2b442414c295034a210a75cc79bcf8f \
-                         -v /var/lib/jenkins/workspace/EMR-Spark:/usr/src \
-                         sonarsource/sonar-scanner-cli \
-                         -Dsonar.projectKey=EMR-Spark \
-                         -Dsonar.sources=. \
-                         -Dsonar.host.url=http://18.189.184.41:9000 \
-                         -Dsonar.login=sqp_b32477c8d2b442414c295034a210a75cc79bcf8f \
-                         '''
-                 }
-             }
+                    # Configure AWS CLI
+                    aws configure set aws_access_key_id ${ACCESS_KEY}
+                    aws configure set aws_secret_access_key ${SECRET_KEY}
+                    aws configure set region ${REGION}
+                    '''
+                }
+            }
         }
 
-       stage('Creating S3 using Terraform') {
-              steps {
-                  script {
-                      // Initialize Terraform
-                      dir(TF_DIR) {
-                      try {
-                          sh """
-                                terraform init
-                                terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                                terraform apply -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                          """
-                       } catch (Exception e){
-                          // If apply fails, destroy the infrastructure
-                          echo 'Terraform apply failed. Running terraform destroy...'
-                          sh """
-                                terraform destroy -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                          """
-                          // Re-throw the exception to ensure the pipeline fails
-                          throw e
-                       }
-                      }
-                  }
-              }
-       }
-       stage('Terraform Destroy')
-       {
-       steps {
-              script {
-                  // Initialize Terraform
-                  dir(TF_DIR) {
-                  sh """
-                        terraform destroy -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                  """
 
-                  }
-               }
-            }
-
-       }
 
     }
 }
