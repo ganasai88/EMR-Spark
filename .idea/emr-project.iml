@@ -3,6 +3,8 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/EMR/.terraform/modules" />
+      <excludeFolder url="file://$MODULE_DIR$/EMR/.terraform/providers" />
       <excludeFolder url="file://$MODULE_DIR$/S3-Terraform/.terraform/providers" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (ETL-Spark)" jdkType="Python SDK" />

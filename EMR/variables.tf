@@ -15,3 +15,9 @@ variable "core_ebs_size" {}
 variable "ingress_cidr_blocks" {}
 variable "log_path" {}
 variable "bootstrap_path" {}
+
+variable "access_key" {
+}
+
+variable "secret_key" {
+}
