@@ -57,10 +57,10 @@ EOF
   autoscaling_role = var.emr_autoscaling_role
 
   bootstrap_action {
-    path = "s3://examplespark/monthly/2024-11-17/bootstrap.sh"
+    path = var.bootstrap_path
     name = "runif"
     args = ["echo running on master node"]
   }
 
-  log_uri = "s3://examplespark/monthly/2024-11-17/logs/"
+  log_uri = var.log_path
 }

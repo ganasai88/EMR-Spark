@@ -21,3 +21,5 @@ core_ebs_size = "64"
 access_key="AKIA3FLD4HIR2V6N4DV2"
 secret_key="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"
 
+log_path = ""
+bootstrap_path = ""

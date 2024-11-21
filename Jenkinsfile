@@ -29,14 +29,14 @@ pipeline {
                       try {
                           sh """
                                 terraform init
-                                terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                                terraform apply -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
+                                terraform plan
+                                terraform apply -auto-approve
                           """
                        } catch (Exception e){
                           // If apply fails, destroy the infrastructure
                           echo 'Terraform apply failed. Running terraform destroy...'
                           sh """
-                                terraform destroy -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
+                                terraform destroy -auto-approve
                           """
                           // Re-throw the exception to ensure the pipeline fails
                           throw e
