@@ -25,8 +25,8 @@ module "emr" {
   core_instance_type        = var.core_instance_type
   core_instance_count       = var.core_instance_count
   core_ebs_size             = var.core_ebs_size
-  log_path = var.log_path
-  bootstrap_path = var.bootstrap_path
+  log_path                  = var.log_path
+  bootstrap_path            = var.bootstrap_path
   emr_master_security_group = module.security.emr_master_security_group
   emr_slave_security_group  = module.security.emr_slave_security_group
   emr_ec2_instance_profile  = module.iam.emr_ec2_instance_profile
