@@ -1,0 +1,9 @@
+# local .terraform provider
+.terraform/*
+EMR/.terraform/
+# tf state files
+*.tfstate
+*.tfstate.*
+
+# variables files
+*.tfvars
