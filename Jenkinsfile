@@ -30,7 +30,7 @@ pipeline {
                                 aws emr list-clusters \
                                     --active \
                                     --query "Clusters[?Status.State=='WAITING']|[0].Id" \
-                                    --region $AWS_REGION \
+                                    --region $REGION \
                                     --output text
                                 ''',
                                 returnStdout: true
