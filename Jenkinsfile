@@ -21,29 +21,19 @@ pipeline {
             }
         }
 
-       stage('Creating S3 using Terraform') {
-           steps {
-                  script {
-                      // Initialize Terraform
-                      dir(EMR_DIR) {
-                      try {
-                          sh """
-                                terraform init
-                                terraform plan -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                                terraform apply -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                          """
-                       } catch (Exception e){
-                          // If apply fails, destroy the infrastructure
-                          echo 'Terraform apply failed. Running terraform destroy...'
-                          sh """
-                                terraform destroy -auto-approve -var 'access_key=$ACCESS_KEY' -var 'secret_key=$SECRET_KEY' -var 'region=$REGION'
-                          """
-                          // Re-throw the exception to ensure the pipeline fails
-                          throw e
-                       }
-                      }
-                  }
-           }
-       }
+        stage('Upload Files to S3') {
+            steps {
+                 script {
+                     sh '''
+                     echo "Uploading files to S3 bucket ${S3_BUCKET}..."
+
+                     # Sync the code to S3
+                     aws s3 sync . s3://${S3_BUCKET} --exclude ".git/*"
+
+                     echo "Files uploaded successfully!"
+                     '''
+                 }
+            }
+        }
     }
 }
