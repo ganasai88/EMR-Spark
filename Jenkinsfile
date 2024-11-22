@@ -58,24 +58,56 @@ pipeline {
         stage('Add Step to EMR Cluster') {
             steps {
                 script {
-                        sh """
-                        aws emr add-steps \
-                            --cluster-id ${env.CLUSTER_ID} \
-                            --steps '[{
-                                "Type": "Spark",
-                                "Name": "${STEP_NAME}",
-                                "ActionOnFailure": "CONTINUE",
-                                "Args": [
-                                    "--deploy-mode", "cluster",
-                                    "--master", "yarn",
-                                    "--py-files", "s3://${S3_BUCKET}/main.py",
-                                    "--config", "s3://${S3_BUCKET}/s3config.json"
-                                ]
-                            }]' \
-                            --region ${REGION}
-                        """
-                    echo "Step added to EMR Cluster ID: ${env.CLUSTER_ID}"
-                }
+                   // Adding step to the running EMR cluster
+                   def addStepCommand = """
+                       aws emr add-steps \
+                           --cluster-id ${env.CLUSTER_ID} \
+                           --steps '[{
+                               "Type": "Spark",
+                               "Name": "${STEP_NAME}",
+                               "ActionOnFailure": "CONTINUE",
+                               "Args": [
+                                   "--deploy-mode", "cluster",
+                                   "--master", "yarn",
+                                   "--py-files", "s3://${S3_BUCKET}/main.py",
+                                   "--config", "s3://${S3_BUCKET}/s3config.json"
+                               ]
+                           }]' \
+                           --region ${REGION}
+                   """
+
+                   sh addStepCommand
+                   echo "Step added to EMR Cluster ID: ${env.CLUSTER_ID}"
+
+                   // Poll for step completion status
+                   def stepId = sh(script: "aws emr list-steps --cluster-id ${env.CLUSTER_ID} --region ${REGION} --query 'Steps[?Name==\"${STEP_NAME}\"]|[0].Id' --output text", returnStdout: true).trim()
+
+                   if (stepId == '') {
+                       error "Failed to retrieve step ID!"
+                   }
+
+                   echo "Polling for step completion..."
+
+                   // Polling for step completion
+                   def stepStatus = ''
+                   while (stepStatus != 'COMPLETED' && stepStatus != 'FAILED' && stepStatus != 'CANCELED') {
+                       // Get the current step status
+                       stepStatus = sh(script: "aws emr describe-step --cluster-id ${env.CLUSTER_ID} --step-id ${stepId} --region ${REGION} --query 'Step.Status.State' --output text", returnStdout: true).trim()
+                       echo "Current step status: ${stepStatus}"
+
+                       if (stepStatus == 'PENDING' || stepStatus == 'RUNNING') {
+                           echo "Step is still running, waiting for completion..."
+                           // Wait for a few seconds before polling again
+                           sleep(time: 30, unit: 'SECONDS')
+                       } else {
+                           echo "Step finished with status: ${stepStatus}"
+                       }
+                   }
+
+                   // Handle failure cases
+                   if (stepStatus == 'FAILED' || stepStatus == 'CANCELED') {
+                       error "EMR step failed or was canceled!"
+                   }
             }
         }
     }

@@ -54,8 +54,8 @@ def main(file_path: str):
 if __name__ == "__main__":
     # Set up argument parsing
     parser = argparse.ArgumentParser()
-    parser.add_argument('--json_file_path', required=True, help='Path to the json file path')
+    parser.add_argument('--config', required=True, help='Path to the json file path')
     args = parser.parse_args()
 
     # Call main function with the provided file path
-    main(args.json_file_path)
+    main(args.config)
