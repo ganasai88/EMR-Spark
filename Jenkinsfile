@@ -21,19 +21,29 @@ pipeline {
             }
         }
 
-        stage('Upload Files to S3') {
-            steps {
-                 script {
-                     sh '''
-                     echo "Uploading files to S3 bucket ${S3_BUCKET}..."
+        stage('Find Running EMR Cluster') {
+                    steps {
+                        script {
+                            // Get the cluster ID of the first running EMR cluster
+                            def clusterId = sh(
+                                script: '''
+                                aws emr list-clusters \
+                                    --active \
+                                    --query "Clusters[?Status.State=='WAITING']|[0].Id" \
+                                    --region $AWS_REGION \
+                                    --output text
+                                ''',
+                                returnStdout: true
+                            ).trim()
 
-                     # Sync the code to S3
-                     aws s3 sync . s3://${S3_BUCKET} --exclude ".git/*"
+                            if (!clusterId) {
+                                error "No running EMR cluster found!"
+                            }
 
-                     echo "Files uploaded successfully!"
-                     '''
-                 }
-            }
+                            echo "Found EMR Cluster ID: ${clusterId}"
+                            env.CLUSTER_ID = clusterId
+                        }
+                    }
         }
     }
 }
